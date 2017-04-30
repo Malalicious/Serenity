@@ -2,26 +2,32 @@
 using System.Threading;
 using Microsoft.Win32;
 using Serenity.Helpers;
+using Serenity.Modules.Aimbot;
+using Serenity.Modules.Anabot;
+using Serenity.Modules.Triggerbot;
+using Serenity.Modules.Widowbot;
 using static Serenity.Helpers.PrettyLog;
 
 namespace Serenity
 {
-    class Program
+    internal class Program
     {
         /// <summary>
         /// Entry point.
         /// </summary>
         /// <param name="args"></param>
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             // Set the title of the window.
             Console.Title = "Dropbox";
 
+            LogInfo("Initializing modules.");
+
             // Start the aimbot.
-            //var aimbot = new Aimbot();
-            //Triggerbot _Triggerbot = new Triggerbot();
-            //var widowbot = new Widowbot();
-            //var anabot = new Anabot();
+            var aimbot = new Aimbot();
+            var triggerbot = new Triggerbot();
+            var widowbot = new Widowbot();
+            var anabot = new Anabot();
 
             new Thread(delegate ()
             {

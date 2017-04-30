@@ -6,14 +6,18 @@ using System.Windows.Forms;
 using Serenity.Helpers;
 using Serenity.Objects;
 
+using static Serenity.Helpers.PrettyLog;
+
 namespace Serenity.Modules.Anabot
 {
-    class Anabot
+    internal class Anabot
     {
         /// <summary>
         /// Contains all FOVs.
         /// </summary>
         public List<Fov> Fovs { get; set; }
+
+        private Fov MyFov;
 
         /// <summary>
         /// Constructor.
@@ -31,8 +35,19 @@ namespace Serenity.Modules.Anabot
             Settings.Anabot.AimKey = 0x05;
             Settings.Anabot.TargetColor = Color.FromArgb(202, 164, 63);
 
-            // Run the aimbot.
-            new Thread(new ThreadStart(Run)).Start();
+            MyFov = Fovs.FirstOrDefault(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
+
+            if (MyFov != null)
+            {
+                // Run the aimbot.
+                new Thread(Run).Start();
+                LogInfo("Anabot initialized");
+            }
+            else
+            {
+                LogError("Could not initialize Anabot as screen does not match resolution." +
+                         " This will be fixed later, for now make your screen resolution 1920x1080 or 1280x720.");
+            }
         }
 
         /// <summary>
@@ -40,9 +55,6 @@ namespace Serenity.Modules.Anabot
         /// </summary>
         public void Run()
         {
-            // Retrieve the Fov.
-            var myFov = Fovs.First(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
-
             // Run the main routine.
             while (true)
             {
@@ -51,7 +63,7 @@ namespace Serenity.Modules.Anabot
                     if (MouseHelper.GetAsyncKeyState(Settings.Anabot.AimKey) < 0)
                     {
                         // Get the screen capture.
-                        var screenCapture = ScreenHelper.GetScreenCapture(myFov.FieldOfView);
+                        var screenCapture = ScreenHelper.GetScreenCapture(MyFov.FieldOfView);
 
                         // Search for a target.
                         var coordinates = SearchHelper.SearchColor(ref screenCapture, Settings.Anabot.TargetColor, 3);
@@ -59,9 +71,9 @@ namespace Serenity.Modules.Anabot
                         // Only continue if a healthbar was found.
                         if (coordinates.X != 0 || coordinates.Y != 0)
                         {
-                            coordinates = ScreenHelper.GetAbsoluteCoordinates(coordinates, myFov.FieldOfView);
+                            coordinates = ScreenHelper.GetAbsoluteCoordinates(coordinates, MyFov.FieldOfView);
 
-                            MouseHelper.Move(ref myFov, coordinates);
+                            MouseHelper.Move(ref MyFov, coordinates);
                         }
 
                         // Destroy the bitmap.

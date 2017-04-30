@@ -2,7 +2,7 @@
 
 namespace Serenity
 {
-    class Settings
+    internal class Settings
     {
         internal class Aimbot
         {

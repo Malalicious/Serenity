@@ -6,14 +6,18 @@ using System.Windows.Forms;
 using Serenity.Helpers;
 using Serenity.Objects;
 
+using static Serenity.Helpers.PrettyLog;
+
 namespace Serenity.Modules.Widowbot
 {
-    class Widowbot
+    internal class Widowbot
     {
         /// <summary>
         /// Contains all FOVs.
         /// </summary>
         public List<Fov> Fovs { get; set; }
+
+        private Fov MyFov;
 
         /// <summary>
         /// Constructor.
@@ -27,12 +31,23 @@ namespace Serenity.Modules.Widowbot
                 new Fov { Resolution = new Point(1280, 720), FieldOfView = new Rectangle(580, 335, 120, 40), RangeValues = new Point(0, 18), Tolerance = new Point(2, 2) }
             };
 
+            MyFov = Fovs.FirstOrDefault(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
+
             // Set default settings.
             Settings.Widowbot.AimKey = 0xA4;
             Settings.Widowbot.TargetColor = Color.FromArgb(215, 40, 35);
 
-            // Run the aimbot.
-            new Thread(new ThreadStart(Run)).Start();
+            if (MyFov != null)
+            {
+                // Run the aimbot.
+                new Thread(Run).Start();
+                LogInfo("Triggerbot initialized");
+            }
+            else
+            {
+                LogError("Could not initialize Widowbot as screen does not match resolution." +
+                         " This will be fixed later, for now make your screen resolution 1920x1080 or 1280x720.");
+            }
         }
 
         /// <summary>
@@ -40,16 +55,13 @@ namespace Serenity.Modules.Widowbot
         /// </summary>
         public void Run()
         {
-            // Retrieve the Fov.
-            var myFov = Fovs.First(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
-
             // Run the main routine.
             while (true)
             {
                 if (MouseHelper.GetAsyncKeyState(Settings.Widowbot.AimKey) < 0)
                 {
                     // Get the screen capture.
-                    var screenCapture = ScreenHelper.GetScreenCapture(myFov.FieldOfView);
+                    var screenCapture = ScreenHelper.GetScreenCapture(MyFov.FieldOfView);
 
                     // Search for a target.
                     var coordinates = SearchHelper.SearchColor(ref screenCapture, Settings.Widowbot.TargetColor, 12);
@@ -57,9 +69,9 @@ namespace Serenity.Modules.Widowbot
                     // Only continue if a healthbar was found.
                     if (coordinates.X != 0 || coordinates.Y != 0)
                     {
-                        coordinates = ScreenHelper.GetAbsoluteCoordinates(coordinates, myFov.FieldOfView);
+                        coordinates = ScreenHelper.GetAbsoluteCoordinates(coordinates, MyFov.FieldOfView);
 
-                        MouseHelper.Move(ref myFov, coordinates, true);
+                        MouseHelper.Move(ref MyFov, coordinates, true);
                     }
 
                     // Destroy the bitmap.
