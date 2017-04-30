@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading;
+using Microsoft.Win32;
+using Serenity.Helpers;
 
 namespace Serenity
 {
@@ -15,18 +17,40 @@ namespace Serenity
             Console.Title = "Dropbox";
 
             // Start the aimbot.
-            Aimbot _Aimbot = new Aimbot();
+            //var aimbot = new Aimbot();
             //Triggerbot _Triggerbot = new Triggerbot();
-            Widowbot _Widowbot = new Widowbot();
-            Anabot _Anabot = new Anabot();
+            //var widowbot = new Widowbot();
+            //var anabot = new Anabot();
+
+            var prettyLog = new PrettyLog();
+
+            prettyLog.LogSuccess("THING DO A THING");
+            prettyLog.LogInfo("I TELL YOU A THING");
+            prettyLog.LogError("BAD THING HAPPEN");
+            prettyLog.LogWarning("MAYBE BAD THING HAPPEN?");
 
             new Thread(delegate ()
             {
                 while (true)
                 {
-                    string cmd = Console.ReadLine();
+                    var command = Console.ReadLine()?.Split(' ');
 
-                    if (cmd == "aimbot.antishake")
+                    if (command != null)
+                    {
+                        switch (command[0])
+                        {
+                            case "aimbot":
+                                break;
+                            case "anabot":
+                                break;
+                            default:
+                                Console.WriteLine($"No command matching {command[0]}, please enter a valid command.");
+                                Console.ReadLine();
+                                break;
+                        }
+                    }
+
+                    if (command[0] == "aimbot.antishake")
                     {
                         if (!Settings.Aimbot.AntiShake)
                         {
@@ -36,9 +60,9 @@ namespace Serenity
                         {
                             Settings.Aimbot.AntiShake = !Settings.Aimbot.AntiShake;
                         }
-                        Console.WriteLine("Anti shake: {0}", Settings.Aimbot.AntiShake);
+                        Console.WriteLine($"Anti shake: {0}", Settings.Aimbot.AntiShake);
                     }
-                    if (cmd == "anabot.toggle")
+                    if (command[0] == "anabot.toggle")
                     {
                         if (!Settings.Anabot.IsEnabled)
                         {

@@ -3,8 +3,10 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using Serenity.Helpers;
+using Serenity.Objects;
 
-namespace Serenity
+namespace Serenity.Modules.Widowbot
 {
     class Widowbot
     {
@@ -39,7 +41,7 @@ namespace Serenity
         public void Run()
         {
             // Retrieve the Fov.
-            Fov MyFov = Fovs.First(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
+            var myFov = Fovs.First(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
 
             // Run the main routine.
             while (true)
@@ -47,22 +49,22 @@ namespace Serenity
                 if (MouseHelper.GetAsyncKeyState(Settings.Widowbot.AimKey) < 0)
                 {
                     // Get the screen capture.
-                    Bitmap ScreenCapture = ScreenHelper.GetScreenCapture(MyFov.FieldOfView);
+                    var screenCapture = ScreenHelper.GetScreenCapture(myFov.FieldOfView);
 
                     // Search for a target.
-                    Point Coordinates = SearchHelper.SearchColor(ref ScreenCapture, Settings.Widowbot.TargetColor, 12);
+                    var coordinates = SearchHelper.SearchColor(ref screenCapture, Settings.Widowbot.TargetColor, 12);
 
                     // Only continue if a healthbar was found.
-                    if (Coordinates.X != 0 || Coordinates.Y != 0)
+                    if (coordinates.X != 0 || coordinates.Y != 0)
                     {
-                        Coordinates = ScreenHelper.GetAbsoluteCoordinates(Coordinates, MyFov.FieldOfView);
+                        coordinates = ScreenHelper.GetAbsoluteCoordinates(coordinates, myFov.FieldOfView);
 
-                        MouseHelper.Move(ref MyFov, Coordinates, true);
+                        MouseHelper.Move(ref myFov, coordinates, true);
                     }
 
                     // Destroy the bitmap.
-                    ScreenCapture.Dispose();
-                    ScreenCapture = null;
+                    screenCapture.Dispose();
+                    screenCapture = null;
                 }
 
                 Thread.Sleep(1);
