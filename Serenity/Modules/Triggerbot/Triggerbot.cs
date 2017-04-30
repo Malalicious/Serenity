@@ -3,8 +3,10 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using Serenity.Helpers;
+using Serenity.Objects;
 
-namespace Serenity
+namespace Serenity.Modules.Triggerbot
 {
     class Triggerbot
     {
@@ -38,26 +40,26 @@ namespace Serenity
         public void Run()
         {
             // Retrieve the Fov.
-            Fov MyFov = Fovs.First(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
+            var myFov = Fovs.First(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
 
             while (true)
             {
                 if (MouseHelper.GetAsyncKeyState(Settings.Triggerbot.AimKey) < 0)
                 {
                     // Get the screen capture.
-                    Bitmap ScreenCapture = ScreenHelper.GetScreenCapture(MyFov.FieldOfView);
+                    var screenCapture = ScreenHelper.GetScreenCapture(myFov.FieldOfView);
 
                     // Search for a target.
-                    Point Coordinates = SearchHelper.SearchColor(ref ScreenCapture, Settings.Triggerbot.TargetColor, 100);
+                    var coordinates = SearchHelper.SearchColor(ref screenCapture, Settings.Triggerbot.TargetColor, 100);
 
-                    if (Coordinates.X != 0 || Coordinates.Y != 0)
+                    if (coordinates.X != 0 || coordinates.Y != 0)
                     {
                         MouseHelper.Click();
                     }
 
                     // Destroy the bitmap.
-                    ScreenCapture.Dispose();
-                    ScreenCapture = null;
+                    screenCapture.Dispose();
+                    screenCapture = null;
                 }
 
                 Thread.Sleep(1);

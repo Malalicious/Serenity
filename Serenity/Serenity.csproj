@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\MouseHelper.cs" />
+    <Compile Include="Helpers\PrettyLog.cs" />
     <Compile Include="Helpers\ScreenHelper.cs" />
     <Compile Include="Helpers\SearchHelper.cs" />
     <Compile Include="Modules\Aimbot\Aimbot.cs" />
