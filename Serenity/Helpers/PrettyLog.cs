@@ -2,29 +2,29 @@
 
 namespace Serenity.Helpers
 {
-    internal class PrettyLog
+    internal static class PrettyLog
     {
         private const ConsoleColor WarningColour = ConsoleColor.Yellow;
         private const ConsoleColor ErrorColour = ConsoleColor.Red;
         private const ConsoleColor SuccessColour = ConsoleColor.Green;
         private const ConsoleColor InfoColour = ConsoleColor.White;
 
-        public void LogWarning(string message)
+        public static void LogWarning(string message)
         {
             LogMessage(WarningColour, message);
         }
 
-        public void LogInfo(string message)
+        public static void LogInfo(string message)
         {
             LogMessage(InfoColour, message);
         }
 
-        public void LogError(string message)
+        public static void LogError(string message)
         {
             LogMessage(ErrorColour, message);
         }
 
-        public void LogSuccess(string message)
+        public static void LogSuccess(string message)
         {
             LogMessage(SuccessColour, message);
         }
