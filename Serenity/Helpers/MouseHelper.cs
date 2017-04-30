@@ -2,16 +2,17 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Serenity.Objects;
 
-namespace Serenity
+namespace Serenity.Helpers
 {
-    class MouseHelper
+    internal class MouseHelper
     {
         [DllImport("User32.dll")]
         public static extern short GetAsyncKeyState(int vKey);
 
         [DllImport("user32.dll")]
-        static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
+        private static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
 
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, int dwExtraInfo);
@@ -28,77 +29,83 @@ namespace Serenity
         /// <summary>
         /// Moves the mouse.
         /// </summary>
-        /// <param name="MyFov"></param>
-        /// <param name="Coordinates"></param>
-        public static void Move(ref Fov MyFov, Point Coordinates, bool ForceHeadshot = false)
+        /// <param name="myFov"></param>
+        /// <param name="coordinates"></param>
+        public static void Move(ref Fov myFov, Point coordinates, bool forceHeadshot = false)
         {
             // Get the crosshair position.
-            Point Crosshair = new Point(0, 0);
-            Crosshair.X = MyFov.Resolution.X / 2;
-            Crosshair.Y = MyFov.Resolution.Y / 2;
+            var crosshair = new Point
+            {
+                X = myFov.Resolution.X / 2,
+                Y = myFov.Resolution.Y / 2
+            };
 
             // Determine the stepcounts.
-            Point StepCount = new Point(0, 0);
-            Point Step = new Point(0, 0);
+            var stepCount = new Point();
+            var step = new Point();
 
             // Calculate the destination.
-            Point Destination = new Point(0, 0);
-            Destination.X = Coordinates.X + MyFov.RangeValues.X;
-            Destination.Y = Coordinates.Y + MyFov.RangeValues.Y;
+            var destination = new Point
+            {
+                X = coordinates.X + myFov.RangeValues.X,
+                Y = coordinates.Y + myFov.RangeValues.Y
+            };
 
             // Calculate the difference from the crosshair.
-            Point Difference = new Point(0, 0);
-            Difference.X = Math.Abs(Crosshair.X - Destination.X);
-            Difference.Y = Math.Abs(Crosshair.Y - Destination.Y);
-            
-            StepCount.X = 5;
-            StepCount.Y = 3;
+            var difference = new Point
+            {
+                X = Math.Abs(crosshair.X - destination.X),
+                Y = Math.Abs(crosshair.Y - destination.Y)
+            };
+
+            stepCount.X = 5;
+            stepCount.Y = 3;
 
             // X-axis.
-            if (Difference.X < 10)
+            if (difference.X < 10)
             {
-                StepCount.X = 1;
+                stepCount.X = 1;
 
                 if (Settings.Aimbot.AntiShake)
                 {
                     Thread.Sleep(1);
                 }
             }
-            else if (Difference.X < 40)
+            else if (difference.X < 40)
             {
-                StepCount.X = 5;
+                stepCount.X = 5;
                 Thread.Sleep(1);
             }
 
-            Step.X = StepCount.X;
+            step.X = stepCount.X;
 
-            if (Crosshair.X > Destination.X)
+            if (crosshair.X > destination.X)
             {
-                Step.X = -StepCount.X;
+                step.X = -stepCount.X;
             }
 
             // Y-axis.
-            if (Difference.Y < 10)
+            if (difference.Y < 10)
             {
-                StepCount.Y = 1;
+                stepCount.Y = 1;
             }
 
-            Step.Y = StepCount.Y;
+            step.Y = stepCount.Y;
 
-            if (Crosshair.Y > Destination.Y)
+            if (crosshair.Y > destination.Y)
             {
-                Step.Y = -StepCount.Y;
+                step.Y = -stepCount.Y;
             }
 
-            if (Crosshair.X > Destination.X + MyFov.Tolerance.X || Crosshair.X < Destination.X - MyFov.Tolerance.X)
+            if (crosshair.X > destination.X + myFov.Tolerance.X || crosshair.X < destination.X - myFov.Tolerance.X)
             {
-                ExecuteMove(Step.X, 0);
+                ExecuteMove(step.X, 0);
 
-                if (ForceHeadshot)
+                if (forceHeadshot)
                 {
-                    if (Crosshair.Y > Destination.Y + MyFov.Tolerance.Y || Crosshair.Y < Destination.Y - MyFov.Tolerance.Y)
+                    if (crosshair.Y > destination.Y + myFov.Tolerance.Y || crosshair.Y < destination.Y - myFov.Tolerance.Y)
                     {
-                        ExecuteMove(0, Step.Y);
+                        ExecuteMove(0, step.Y);
                     }
                 }
             }
@@ -107,26 +114,26 @@ namespace Serenity
         /// <summary>
         /// Executes the mouse moves.
         /// </summary>
-        /// <param name="Step"></param>
-        /// <param name="Async"></param>
-        private static void ExecuteMove(Point Step, bool Async = false)
+        /// <param name="step"></param>
+        /// <param name="async"></param>
+        private static void ExecuteMove(Point step, bool async = false)
         {
-            if (!Async)
+            if (!async)
             {
-                mouse_event(0x1, Step.X, Step.Y, 0, 0);
+                mouse_event(0x1, step.X, step.Y, 0, 0);
             }
             else
             {
                 // Move X.
                 new Thread(() =>
                 {
-                    mouse_event(0x1, Step.X, 0, 0, 0);
+                    mouse_event(0x1, step.X, 0, 0, 0);
                 }).Start();
 
                 // Move Y.
                 new Thread(() =>
                 {
-                    mouse_event(0x1, 0, Step.Y, 0, 0);
+                    mouse_event(0x1, 0, step.Y, 0, 0);
                 }).Start();
             }
         }
@@ -134,11 +141,11 @@ namespace Serenity
         /// <summary>
         /// Moves the mouse.
         /// </summary>
-        /// <param name="X"></param>
-        /// <param name="Y"></param>
-        private static void ExecuteMove(int X, int Y)
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        private static void ExecuteMove(int x, int y)
         {
-            ExecuteMove(new Point(X, Y));
+            ExecuteMove(new Point(x, y));
         }
     }
 }

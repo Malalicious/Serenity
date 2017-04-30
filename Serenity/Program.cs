@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Threading;
+using Microsoft.Win32;
+using Serenity.Helpers;
+using static Serenity.Helpers.PrettyLog;
 
 namespace Serenity
 {
@@ -15,40 +18,42 @@ namespace Serenity
             Console.Title = "Dropbox";
 
             // Start the aimbot.
-            Aimbot _Aimbot = new Aimbot();
+            //var aimbot = new Aimbot();
             //Triggerbot _Triggerbot = new Triggerbot();
-            Widowbot _Widowbot = new Widowbot();
-            Anabot _Anabot = new Anabot();
+            //var widowbot = new Widowbot();
+            //var anabot = new Anabot();
 
             new Thread(delegate ()
             {
                 while (true)
                 {
-                    string cmd = Console.ReadLine();
+                    var command = Console.ReadLine()?.Split(' ');
 
-                    if (cmd == "aimbot.antishake")
+                    if (command == null) continue;
+
+                    switch (command[0])
                     {
-                        if (!Settings.Aimbot.AntiShake)
-                        {
-                            Settings.Aimbot.AntiShake = true;
-                        }
-                        else
-                        {
-                            Settings.Aimbot.AntiShake = !Settings.Aimbot.AntiShake;
-                        }
-                        Console.WriteLine("Anti shake: {0}", Settings.Aimbot.AntiShake);
-                    }
-                    if (cmd == "anabot.toggle")
-                    {
-                        if (!Settings.Anabot.IsEnabled)
-                        {
-                            Settings.Anabot.IsEnabled = true;
-                        }
-                        else
-                        {
-                            Settings.Anabot.IsEnabled = !Settings.Anabot.IsEnabled;
-                        }
-                        Console.WriteLine("Anabot: {0}", Settings.Anabot.IsEnabled);
+                        case "aimbot":
+                            if (command[1] == "antishake")
+                            {
+                                Settings.Aimbot.AntiShake = !Settings.Aimbot.AntiShake;
+                                LogInfo($"Anti shake: { Settings.Aimbot.AntiShake}");
+                            }
+                            else
+                                LogError($"Aimbot has no command {command[1]} registered.");
+                            break;
+                        case "anabot":
+                            if (command[1] == "toggle")
+                            {
+                                Settings.Anabot.IsEnabled = !Settings.Anabot.IsEnabled;
+                                LogInfo($"Anabot: { Settings.Anabot.IsEnabled}");
+                            }
+                            else
+                                LogError($"Anabot has no command {command[1]} registered.");
+                            break;
+                        default:
+                            LogError($"No command matching {command[0]}, please enter a valid command.");
+                            break;
                     }
                 }
             }).Start();
@@ -59,7 +64,7 @@ namespace Serenity
                 if (MouseHelper.GetAsyncKeyState(0x61) < 0) // Numpad1
                 {
                     Settings.Aimbot.ForceHeadshot = !Settings.Aimbot.ForceHeadshot;
-                    Console.WriteLine("Force headshot: {0}", Settings.Aimbot.ForceHeadshot);
+                    LogInfo($"Force headshot: { Settings.Aimbot.ForceHeadshot}");
 
                     MouseHelper.keybd_event(0x61, 0, 0x2, 0);
                     Thread.Sleep(200);

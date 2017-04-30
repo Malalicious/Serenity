@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Serenity
+namespace Serenity.Objects
 {
     class Fov
     {
