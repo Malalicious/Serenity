@@ -22,9 +22,10 @@ namespace Serenity
             // Set the title of the window.
             Console.Title = "Dropbox";
 
-            LogInfo("Initializing modules.");
-
+            LogInfo("Initializing settings.");
             var settingsManager = new SettingsManager();
+            settingsManager.LoadSettingsFromDefaultPath();
+            LogInfo("Settings loaded successfully.");
 
             // Start the aimbot.
             var aimbot = new Aimbot();

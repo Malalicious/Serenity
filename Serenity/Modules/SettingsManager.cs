@@ -15,11 +15,6 @@ namespace Serenity.Modules
 
         private const string SettingsFolderPath = "settings";
 
-        public SettingsManager()
-        {
-            LoadSettingsFromDefaultPath();
-        }
-
         internal class AimbotSettings
         {
             public AimbotSettings()
