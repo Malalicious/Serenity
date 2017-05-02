@@ -31,10 +31,6 @@ namespace Serenity.Modules.Anabot
                 new Fov { Resolution = new Point(1280, 720), FieldOfView = new Rectangle(550, 300, 180, 110), RangeValues = new Point(0, 25), Tolerance = new Point(2, 2) }
             };
 
-            // Set default settings.
-            Settings.Anabot.AimKey = 0x05;
-            Settings.Anabot.TargetColor = Color.FromArgb(202, 164, 63);
-
             MyFov = Fovs.FirstOrDefault(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
 
             if (MyFov != null)
@@ -45,8 +41,8 @@ namespace Serenity.Modules.Anabot
             }
             else
             {
-                LogError("Could not initialize Anabot as screen does not match resolution." +
-                         " This will be fixed later, for now make your screen resolution 1920x1080 or 1280x720.");
+                LogError("Could not initialize Anabot as screen does not match available resolutions.\n" +
+                         "This will be fixed later, for now make your screen resolution 1920x1080\nor 1280x720.");
             }
         }
 
@@ -58,15 +54,15 @@ namespace Serenity.Modules.Anabot
             // Run the main routine.
             while (true)
             {
-                if (Settings.Anabot.IsEnabled)
+                if (SettingsManager.Anabot.IsEnabled)
                 {
-                    if (MouseHelper.GetAsyncKeyState(Settings.Anabot.AimKey) < 0)
+                    if (MouseHelper.GetAsyncKeyState(SettingsManager.Anabot.AimKey) < 0)
                     {
                         // Get the screen capture.
                         var screenCapture = ScreenHelper.GetScreenCapture(MyFov.FieldOfView);
 
                         // Search for a target.
-                        var coordinates = SearchHelper.SearchColor(ref screenCapture, Settings.Anabot.TargetColor, 3);
+                        var coordinates = SearchHelper.SearchColor(ref screenCapture, SettingsManager.Anabot.TargetColor, 3);
 
                         // Only continue if a healthbar was found.
                         if (coordinates.X != 0 || coordinates.Y != 0)

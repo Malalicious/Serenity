@@ -77,6 +77,7 @@
     <Compile Include="Helpers\SearchHelper.cs" />
     <Compile Include="Modules\Aimbot\Aimbot.cs" />
     <Compile Include="Modules\Anabot\Anabot.cs" />
+    <Compile Include="Modules\SettingsManager.cs" />
     <Compile Include="Modules\Triggerbot\Triggerbot.cs" />
     <Compile Include="Modules\Widowbot\Widowbot.cs" />
     <Compile Include="Objects\Fov.cs" />
@@ -87,7 +88,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

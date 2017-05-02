@@ -32,10 +32,6 @@ namespace Serenity.Modules.Triggerbot
 
             MyFov = Fovs.FirstOrDefault(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
 
-            // Set default settings.
-            Settings.Triggerbot.AimKey = 0xA4;
-            Settings.Triggerbot.TargetColor = Color.FromArgb(254, 0, 0);
-
             // Run the aimbot.
             var thread = new Thread(Run);
             if (MyFov != null)
@@ -45,8 +41,8 @@ namespace Serenity.Modules.Triggerbot
             }
             else
             {
-                LogError("Could not initialize Triggerbot as screen does not match resolution." +
-                         " This will be fixed later, for now make your screen resolution 1920x1080.");
+                LogError("Could not initialize Triggerbot as screen does not match available resolutions.\n" +
+                         "This will be fixed later, for now make your screen resolution 1920x1080.\n");
             }
         }
 
@@ -61,13 +57,13 @@ namespace Serenity.Modules.Triggerbot
         {
             while (true)
             {
-                if (MouseHelper.GetAsyncKeyState(Settings.Triggerbot.AimKey) < 0)
+                if (MouseHelper.GetAsyncKeyState(SettingsManager.Triggerbot.AimKey) < 0)
                 {
                     // Get the screen capture.
                     var screenCapture = ScreenHelper.GetScreenCapture(MyFov.FieldOfView);
 
                     // Search for a target.
-                    var coordinates = SearchHelper.SearchColor(ref screenCapture, Settings.Triggerbot.TargetColor, 100);
+                    var coordinates = SearchHelper.SearchColor(ref screenCapture, SettingsManager.Triggerbot.TargetColor, 100);
 
                     if (coordinates.X != 0 || coordinates.Y != 0)
                     {

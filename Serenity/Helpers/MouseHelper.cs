@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Serenity.Modules;
 using Serenity.Objects;
 
 namespace Serenity.Helpers
@@ -66,7 +67,7 @@ namespace Serenity.Helpers
             {
                 stepCount.X = 1;
 
-                if (Settings.Aimbot.AntiShake)
+                if (SettingsManager.Aimbot.AntiShake)
                 {
                     Thread.Sleep(1);
                 }

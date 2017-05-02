@@ -33,20 +33,16 @@ namespace Serenity.Modules.Widowbot
 
             MyFov = Fovs.FirstOrDefault(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
 
-            // Set default settings.
-            Settings.Widowbot.AimKey = 0xA4;
-            Settings.Widowbot.TargetColor = Color.FromArgb(215, 40, 35);
-
             if (MyFov != null)
             {
                 // Run the aimbot.
                 new Thread(Run).Start();
-                LogInfo("Triggerbot initialized");
+                LogInfo("Widowbot initialized");
             }
             else
             {
-                LogError("Could not initialize Widowbot as screen does not match resolution." +
-                         " This will be fixed later, for now make your screen resolution 1920x1080 or 1280x720.");
+                LogError("Could not initialize Widowbot as screen does not match resolution.\n" +
+                         "This will be fixed later, for now make your screen resolution 1920x1080\nor 1280x720.\n");
             }
         }
 
@@ -58,13 +54,13 @@ namespace Serenity.Modules.Widowbot
             // Run the main routine.
             while (true)
             {
-                if (MouseHelper.GetAsyncKeyState(Settings.Widowbot.AimKey) < 0)
+                if (MouseHelper.GetAsyncKeyState(SettingsManager.Widowbot.AimKey) < 0)
                 {
                     // Get the screen capture.
                     var screenCapture = ScreenHelper.GetScreenCapture(MyFov.FieldOfView);
 
                     // Search for a target.
-                    var coordinates = SearchHelper.SearchColor(ref screenCapture, Settings.Widowbot.TargetColor, 12);
+                    var coordinates = SearchHelper.SearchColor(ref screenCapture, SettingsManager.Widowbot.TargetColor, 12);
 
                     // Only continue if a healthbar was found.
                     if (coordinates.X != 0 || coordinates.Y != 0)
