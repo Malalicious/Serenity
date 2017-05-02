@@ -55,10 +55,10 @@ namespace Serenity
                             if (command[1] == "toggle")
                             {
                                 SettingsManager.Anabot.IsEnabled = !SettingsManager.Anabot.IsEnabled;
-                                LogInfo($"AnabotSettings: { SettingsManager.Anabot.IsEnabled}");
+                                LogInfo($"Anabot enabled: { SettingsManager.Anabot.IsEnabled}");
                             }
                             else
-                                LogError($"AnabotSettings has no command {command[1]} registered.");
+                                LogError($"Anabot has no command {command[1]} registered.");
                             break;
                         default:
                             LogError($"No command matching {command[0]}, please enter a valid command.");
