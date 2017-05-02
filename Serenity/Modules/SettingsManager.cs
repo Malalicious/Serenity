@@ -43,7 +43,7 @@ namespace Serenity.Modules
         {
             public WidowbotSettings()
             {
-                AimKey = 163;
+                AimKey = 0xA4;
                 TargetColor = Color.FromArgb(215, 40, 35);
             }
 

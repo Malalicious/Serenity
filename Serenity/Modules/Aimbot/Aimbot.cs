@@ -33,11 +33,6 @@ namespace Serenity.Modules.Aimbot
 
             MyFov = Fovs.FirstOrDefault(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
 
-            // Set default settings.
-            SettingsManager.Aimbot.AimKey = 0x06;
-            SettingsManager.Aimbot.ForceHeadshot = false;
-            SettingsManager.Aimbot.TargetColor = Color.FromArgb(255, 0, 19);
-
             if (MyFov != null)
             {
                 // Run the aimbot.
