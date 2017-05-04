@@ -2,26 +2,36 @@
 using System.Threading;
 using Microsoft.Win32;
 using Serenity.Helpers;
+using Serenity.Modules;
+using Serenity.Modules.Aimbot;
+using Serenity.Modules.Anabot;
+using Serenity.Modules.Triggerbot;
+using Serenity.Modules.Widowbot;
 using static Serenity.Helpers.PrettyLog;
 
 namespace Serenity
 {
-    class Program
+    internal class Program
     {
         /// <summary>
         /// Entry point.
         /// </summary>
         /// <param name="args"></param>
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             // Set the title of the window.
             Console.Title = "Dropbox";
 
+            LogInfo("Initializing settings.");
+            var settingsManager = new SettingsManager();
+            settingsManager.LoadSettingsFromDefaultPath();
+            LogInfo("Settings loaded successfully.");
+
             // Start the aimbot.
-            //var aimbot = new Aimbot();
-            //Triggerbot _Triggerbot = new Triggerbot();
-            //var widowbot = new Widowbot();
-            //var anabot = new Anabot();
+            var aimbot = new Aimbot();
+            var triggerbot = new Triggerbot();
+            var widowbot = new Widowbot();
+            var anabot = new Anabot();
 
             new Thread(delegate ()
             {
@@ -36,17 +46,17 @@ namespace Serenity
                         case "aimbot":
                             if (command[1] == "antishake")
                             {
-                                Settings.Aimbot.AntiShake = !Settings.Aimbot.AntiShake;
-                                LogInfo($"Anti shake: { Settings.Aimbot.AntiShake}");
+                                SettingsManager.Aimbot.AntiShake = !SettingsManager.Aimbot.AntiShake;
+                                LogInfo($"Anti shake: { SettingsManager.Aimbot.AntiShake}");
                             }
                             else
-                                LogError($"Aimbot has no command {command[1]} registered.");
+                                LogError($"AimbotSettings has no command {command[1]} registered.");
                             break;
                         case "anabot":
                             if (command[1] == "toggle")
                             {
-                                Settings.Anabot.IsEnabled = !Settings.Anabot.IsEnabled;
-                                LogInfo($"Anabot: { Settings.Anabot.IsEnabled}");
+                                SettingsManager.Anabot.IsEnabled = !SettingsManager.Anabot.IsEnabled;
+                                LogInfo($"Anabot enabled: { SettingsManager.Anabot.IsEnabled}");
                             }
                             else
                                 LogError($"Anabot has no command {command[1]} registered.");
@@ -63,8 +73,8 @@ namespace Serenity
                 // Register keypresses here.
                 if (MouseHelper.GetAsyncKeyState(0x61) < 0) // Numpad1
                 {
-                    Settings.Aimbot.ForceHeadshot = !Settings.Aimbot.ForceHeadshot;
-                    LogInfo($"Force headshot: { Settings.Aimbot.ForceHeadshot}");
+                    SettingsManager.Aimbot.ForceHeadshot = !SettingsManager.Aimbot.ForceHeadshot;
+                    LogInfo($"Force headshot: { SettingsManager.Aimbot.ForceHeadshot}");
 
                     MouseHelper.keybd_event(0x61, 0, 0x2, 0);
                     Thread.Sleep(200);
