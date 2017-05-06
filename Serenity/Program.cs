@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using Microsoft.Win32;
 using Serenity.Helpers;
@@ -37,32 +38,26 @@ namespace Serenity
             {
                 while (true)
                 {
-                    var command = Console.ReadLine()?.Split(' ');
+                    var commandArgs = Console.ReadLine()?.ToLower().Split(' ').ToList();
 
-                    if (command == null) continue;
+                    if (commandArgs == null) continue;
 
-                    switch (command[0])
+                    switch (commandArgs[0])
                     {
                         case "aimbot":
-                            if (command[1] == "antishake")
-                            {
-                                SettingsManager.Aimbot.AntiShake = !SettingsManager.Aimbot.AntiShake;
-                                LogInfo($"Anti shake: { SettingsManager.Aimbot.AntiShake}");
-                            }
-                            else
-                                LogError($"AimbotSettings has no command {command[1]} registered.");
+                            aimbot.HandleCommand(commandArgs);
                             break;
                         case "anabot":
-                            if (command[1] == "toggle")
-                            {
-                                SettingsManager.Anabot.IsEnabled = !SettingsManager.Anabot.IsEnabled;
-                                LogInfo($"Anabot enabled: { SettingsManager.Anabot.IsEnabled}");
-                            }
-                            else
-                                LogError($"Anabot has no command {command[1]} registered.");
+                            aimbot.HandleCommand(commandArgs);
+                            break;
+                        case "widowbot":
+                            aimbot.HandleCommand(commandArgs);
+                            break;
+                        case "triggerbot":
+                            aimbot.HandleCommand(commandArgs);
                             break;
                         default:
-                            LogError($"No command matching {command[0]}, please enter a valid command.");
+                            LogError($"No command matching '{commandArgs[0]}', please enter a valid command.");
                             break;
                     }
                 }

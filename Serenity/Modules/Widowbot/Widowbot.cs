@@ -10,7 +10,7 @@ using static Serenity.Helpers.PrettyLog;
 
 namespace Serenity.Modules.Widowbot
 {
-    internal class Widowbot
+    internal class Widowbot : IModule
     {
         /// <summary>
         /// Contains all FOVs.
@@ -77,6 +77,11 @@ namespace Serenity.Modules.Widowbot
 
                 Thread.Sleep(1);
             }
+        }
+
+        public void HandleCommand(IEnumerable<string> args)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

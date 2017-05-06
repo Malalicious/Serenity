@@ -77,6 +77,7 @@
     <Compile Include="Helpers\SearchHelper.cs" />
     <Compile Include="Modules\Aimbot\Aimbot.cs" />
     <Compile Include="Modules\Anabot\Anabot.cs" />
+    <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\SettingsManager.cs" />
     <Compile Include="Modules\Triggerbot\Triggerbot.cs" />
     <Compile Include="Modules\Widowbot\Widowbot.cs" />

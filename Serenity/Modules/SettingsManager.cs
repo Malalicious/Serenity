@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Newtonsoft.Json;
 using Serenity.Helpers;
 
+using static Serenity.Helpers.PrettyLog;
+
 namespace Serenity.Modules
 {
-    internal class SettingsManager
+    internal class SettingsManager : IModule
     {
         public static AimbotSettings Aimbot;
         public static AnabotSettings Anabot;
@@ -101,13 +104,13 @@ namespace Serenity.Modules
             var settingsFolder = $"{Environment.CurrentDirectory}\\settings";
             if (!Directory.Exists(settingsFolder))
             {
-                PrettyLog.LogWarning($"No settings folder found, creating it now at {settingsFolder}.");
+                LogWarning($"No settings folder found, creating it now at {settingsFolder}.");
                 Directory.CreateDirectory(settingsFolder);
             }
 
             if (!File.Exists($"{settingsFolder}\\aimbot.json"))
             {
-                PrettyLog.LogWarning("No aimbot settings found, initializing with default values.");
+                LogWarning("No aimbot settings found, initializing with default values.");
                 Aimbot = new AimbotSettings();
             }
             else
@@ -118,7 +121,7 @@ namespace Serenity.Modules
 
             if (!File.Exists($"{settingsFolder}\\anabot.json"))
             {
-                PrettyLog.LogWarning("No anabot settings found, initializing with default values.");
+                LogWarning("No anabot settings found, initializing with default values.");
                 Anabot = new AnabotSettings();
             }
             else
@@ -129,7 +132,7 @@ namespace Serenity.Modules
 
             if (!File.Exists($"{settingsFolder}\\widowbot.json"))
             {
-                PrettyLog.LogWarning("No widowbot settings found, initializing with default values.");
+                LogWarning("No widowbot settings found, initializing with default values.");
                 Widowbot = new WidowbotSettings();
             }
             else
@@ -140,7 +143,7 @@ namespace Serenity.Modules
 
             if (!File.Exists($"{settingsFolder}\\triggerbot.json"))
             {
-                PrettyLog.LogWarning("No triggerbot settings found, initializing with default values.");
+                LogWarning("No triggerbot settings found, initializing with default values.");
                 Triggerbot = new TriggerbotSettings();
             }
             else
@@ -149,6 +152,11 @@ namespace Serenity.Modules
                 Triggerbot = JsonConvert.DeserializeObject<TriggerbotSettings>(file);
             }
             SaveSettingsToFile();
+        }
+
+        public void HandleCommand(IEnumerable<string> args)
+        {
+            LogWarning("I don't do shit yet!");
         }
     }
 }

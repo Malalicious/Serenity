@@ -10,7 +10,7 @@ using static Serenity.Helpers.PrettyLog;
 
 namespace Serenity.Modules.Triggerbot
 {
-    internal class Triggerbot
+    internal class Triggerbot : IModule
     {
         /// <summary>
         /// Contains all FOVs.
@@ -77,6 +77,11 @@ namespace Serenity.Modules.Triggerbot
 
                 Thread.Sleep(1);
             }
+        }
+
+        public void HandleCommand(IEnumerable<string> args)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

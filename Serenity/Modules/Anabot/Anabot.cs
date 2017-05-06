@@ -10,7 +10,7 @@ using static Serenity.Helpers.PrettyLog;
 
 namespace Serenity.Modules.Anabot
 {
-    internal class Anabot
+    internal class Anabot : IModule
     {
         /// <summary>
         /// Contains all FOVs.
@@ -84,6 +84,11 @@ namespace Serenity.Modules.Anabot
                     Thread.Sleep(1000);
                 }
             }
+        }
+
+        public void HandleCommand(IEnumerable<string> args)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
