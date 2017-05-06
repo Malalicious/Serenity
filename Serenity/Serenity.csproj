@@ -56,6 +56,9 @@
     <ApplicationIcon>Resources\Dropbox.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -74,6 +77,7 @@
     <Compile Include="Helpers\SearchHelper.cs" />
     <Compile Include="Modules\Aimbot\Aimbot.cs" />
     <Compile Include="Modules\Anabot\Anabot.cs" />
+    <Compile Include="Modules\SettingsManager.cs" />
     <Compile Include="Modules\Triggerbot\Triggerbot.cs" />
     <Compile Include="Modules\Widowbot\Widowbot.cs" />
     <Compile Include="Objects\Fov.cs" />
@@ -84,10 +88,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

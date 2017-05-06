@@ -6,14 +6,18 @@ using System.Windows.Forms;
 using Serenity.Helpers;
 using Serenity.Objects;
 
+using static Serenity.Helpers.PrettyLog;
+
 namespace Serenity.Modules.Anabot
 {
-    class Anabot
+    internal class Anabot
     {
         /// <summary>
         /// Contains all FOVs.
         /// </summary>
         public List<Fov> Fovs { get; set; }
+
+        private Fov MyFov;
 
         /// <summary>
         /// Constructor.
@@ -23,16 +27,23 @@ namespace Serenity.Modules.Anabot
             // Initialize Fovs.
             Fovs = new List<Fov>
             {
-                new Fov { Resolution = new Point(1920, 1080), FieldOfView = new Rectangle(830, 430, 275, 130), RangeValues = new Point(0, 25), Tolerance = new Point(2, 2) },
+                new Fov { Resolution = new Point(1920, 1200), FieldOfView = new Rectangle(830, 430, 275, 130), RangeValues = new Point(0, 25), Tolerance = new Point(2, 2) },
                 new Fov { Resolution = new Point(1280, 720), FieldOfView = new Rectangle(550, 300, 180, 110), RangeValues = new Point(0, 25), Tolerance = new Point(2, 2) }
             };
 
-            // Set default settings.
-            Settings.Anabot.AimKey = 0x05;
-            Settings.Anabot.TargetColor = Color.FromArgb(202, 164, 63);
+            MyFov = Fovs.FirstOrDefault(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
 
-            // Run the aimbot.
-            new Thread(new ThreadStart(Run)).Start();
+            if (MyFov != null)
+            {
+                // Run the aimbot.
+                new Thread(Run).Start();
+                LogInfo("Anabot initialized");
+            }
+            else
+            {
+                LogError("Could not initialize Anabot as screen does not match available resolutions.\n" +
+                         "This will be fixed later, for now make your screen resolution 1920x1080\nor 1280x720.");
+            }
         }
 
         /// <summary>
@@ -40,28 +51,25 @@ namespace Serenity.Modules.Anabot
         /// </summary>
         public void Run()
         {
-            // Retrieve the Fov.
-            var myFov = Fovs.First(x => x.Resolution == new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
-
             // Run the main routine.
             while (true)
             {
-                if (Settings.Anabot.IsEnabled)
+                if (SettingsManager.Anabot.IsEnabled)
                 {
-                    if (MouseHelper.GetAsyncKeyState(Settings.Anabot.AimKey) < 0)
+                    if (MouseHelper.GetAsyncKeyState(SettingsManager.Anabot.AimKey) < 0)
                     {
                         // Get the screen capture.
-                        var screenCapture = ScreenHelper.GetScreenCapture(myFov.FieldOfView);
+                        var screenCapture = ScreenHelper.GetScreenCapture(MyFov.FieldOfView);
 
                         // Search for a target.
-                        var coordinates = SearchHelper.SearchColor(ref screenCapture, Settings.Anabot.TargetColor, 3);
+                        var coordinates = SearchHelper.SearchColor(ref screenCapture, SettingsManager.Anabot.TargetColor, 3);
 
                         // Only continue if a healthbar was found.
                         if (coordinates.X != 0 || coordinates.Y != 0)
                         {
-                            coordinates = ScreenHelper.GetAbsoluteCoordinates(coordinates, myFov.FieldOfView);
+                            coordinates = ScreenHelper.GetAbsoluteCoordinates(coordinates, MyFov.FieldOfView);
 
-                            MouseHelper.Move(ref myFov, coordinates);
+                            MouseHelper.Move(ref MyFov, coordinates);
                         }
 
                         // Destroy the bitmap.
