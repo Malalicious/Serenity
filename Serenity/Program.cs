@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using Microsoft.Win32;
 using Serenity.Helpers;
 using Serenity.Modules;
 using Serenity.Modules.Aimbot;
@@ -34,6 +33,8 @@ namespace Serenity
             var widowbot = new Widowbot();
             var anabot = new Anabot();
 
+            LogInfo("Initialization complete. If you're lost, type help in this console.");
+
             new Thread(delegate ()
             {
                 while (true)
@@ -42,22 +43,47 @@ namespace Serenity
 
                     if (commandArgs == null) continue;
 
-                    switch (commandArgs[0])
+                    var commandRoot = commandArgs[0];
+                    commandArgs.RemoveAt(0);
+
+                    switch (commandRoot)
                     {
                         case "aimbot":
+                        case "aim":
                             aimbot.HandleCommand(commandArgs);
                             break;
                         case "anabot":
-                            aimbot.HandleCommand(commandArgs);
+                        case "ana":
+                            anabot.HandleCommand(commandArgs);
                             break;
                         case "widowbot":
-                            aimbot.HandleCommand(commandArgs);
+                        case "widow":
+                            widowbot.HandleCommand(commandArgs);
                             break;
                         case "triggerbot":
-                            aimbot.HandleCommand(commandArgs);
+                        case "trigger":
+                            triggerbot.HandleCommand(commandArgs);
+                            break;
+                        case "settings":
+                            settingsManager.HandleCommand(commandArgs);
+                            break;
+                        case "help":
+                            LogInfo("\nSoftware written by syscall78 and updated by Roast.\nIf you paid money for this, you've been scammed!\n\n" +
+                                    "Available commands:\n" +
+                                    "aimbot, aim\t\t- Send commands to aimbot\n" +
+                                    "anabot, ana\t\t- Send commands to anabot\n" +
+                                    "widowbot, widow\t\t- Send commands to widowbot\n" +
+                                    "triggerbot, trigger\t- Send commands to triggerbot\n" +
+                                    "settings\t\t- Send commands to settings manager\n" +
+                                    "clear, cls\t\t- Clear the console window\n" +
+                                    "help\t\t\t- Print this text again.\n");
+                            break;
+                        case "clear":
+                        case "cls":
+                            Console.Clear();
                             break;
                         default:
-                            LogError($"No command matching '{commandArgs[0]}', please enter a valid command.");
+                            LogError($"No command matching '{commandRoot}', please enter a valid command or type 'help'.");
                             break;
                     }
                 }

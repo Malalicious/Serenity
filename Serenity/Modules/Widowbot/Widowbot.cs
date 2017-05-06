@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -81,7 +82,8 @@ namespace Serenity.Modules.Widowbot
 
         public void HandleCommand(IEnumerable<string> args)
         {
-            throw new System.NotImplementedException();
+            LogWarning("Widowbot currently has no command support.\n" +
+                       $"To change its settings, go to {Environment.CurrentDirectory}\\widowbot.json");
         }
     }
 }

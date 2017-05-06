@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Serenity.Helpers
 {
@@ -35,5 +37,16 @@ namespace Serenity.Helpers
             Console.WriteLine(message);
             Console.ForegroundColor = InfoColour;
         }
+
+        private static void LogMessage(IEnumerable<PrettyMessage> messages)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class PrettyMessage
+    {
+        public ConsoleColor MessageColor { get; set; }
+        public string Message { get; set; }
     }
 }

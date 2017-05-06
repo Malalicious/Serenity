@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Serenity.Helpers;
 
@@ -16,7 +17,8 @@ namespace Serenity.Modules
         public static WidowbotSettings Widowbot;
         public static TriggerbotSettings Triggerbot;
 
-        private const string SettingsFolderPath = "settings";
+        private const string SettingsFolderName = "settings";
+        private readonly string SettingsFolderFullPath = $"{Environment.CurrentDirectory}\\settings";
 
         internal class AimbotSettings
         {
@@ -45,9 +47,9 @@ namespace Serenity.Modules
                 TargetColor = Color.FromArgb(215, 40, 35);
             }
 
-            public Color TargetColor { get; set; }
-
             public int AimKey { get; set; }
+
+            public Color TargetColor { get; set; }
         }
 
         internal class AnabotSettings
@@ -55,14 +57,16 @@ namespace Serenity.Modules
             public AnabotSettings()
             {
                 AimKey = 0x05;
+                IsEnabled = false;
                 TargetColor = Color.FromArgb(202, 164, 63);
             }
+
+            public byte AimKey { get; set; }
 
             public bool IsEnabled { get; set; }
 
             public Color TargetColor { get; set; }
 
-            public byte AimKey { get; set; }
         }
 
         internal class TriggerbotSettings
@@ -70,93 +74,93 @@ namespace Serenity.Modules
             public TriggerbotSettings()
             {
                 AimKey = 0xA4;
+                IsEnabled = false;
                 TargetColor = Color.FromArgb(254, 0, 0);
             }
 
-            public Color TargetColor { get; set; }
-
             public byte AimKey { get; set; }
+
+            public bool IsEnabled { get; set; }
+
+            public Color TargetColor { get; set; }
         }
 
         public void SaveSettingsToFile()
         {
-            var serializer = new JsonSerializer();
-            using (var file = File.CreateText($"{SettingsFolderPath}\\aimbot.json"))
-            {
-                serializer.Serialize(file, Aimbot);
-            }
-            using (var file = File.CreateText($"{SettingsFolderPath}\\anabot.json"))
-            {
-                serializer.Serialize(file, Anabot);
-            }
-            using (var file = File.CreateText($"{SettingsFolderPath}\\widowbot.json"))
-            {
-                serializer.Serialize(file, Widowbot);
-            }
-            using (var file = File.CreateText($"{SettingsFolderPath}\\triggerbot.json"))
-            {
-                serializer.Serialize(file, Triggerbot);
-            }
+            SerializeObjectToFile(Aimbot, $"{SettingsFolderName}\\aimbot.json");
+            SerializeObjectToFile(Anabot, $"{SettingsFolderName}\\anabot.json");
+            SerializeObjectToFile(Widowbot, $"{SettingsFolderName}\\widowbot.json");
+            SerializeObjectToFile(Triggerbot, $"{SettingsFolderName}\\triggerbot.json");
         }
 
         public void LoadSettingsFromDefaultPath()
         {
-            var settingsFolder = $"{Environment.CurrentDirectory}\\settings";
-            if (!Directory.Exists(settingsFolder))
+            if (!Directory.Exists(SettingsFolderFullPath))
             {
-                LogWarning($"No settings folder found, creating it now at {settingsFolder}.");
-                Directory.CreateDirectory(settingsFolder);
+                LogWarning($"No settings folder found, creating it now at {SettingsFolderFullPath}.");
+                Directory.CreateDirectory(SettingsFolderFullPath);
             }
 
-            if (!File.Exists($"{settingsFolder}\\aimbot.json"))
-            {
-                LogWarning("No aimbot settings found, initializing with default values.");
-                Aimbot = new AimbotSettings();
-            }
-            else
-            {
-                var file = File.ReadAllText($"{settingsFolder}/aimbot.json");
-                Aimbot = JsonConvert.DeserializeObject<AimbotSettings>(file);
-            }
-
-            if (!File.Exists($"{settingsFolder}\\anabot.json"))
-            {
-                LogWarning("No anabot settings found, initializing with default values.");
-                Anabot = new AnabotSettings();
-            }
-            else
-            {
-                var file = File.ReadAllText($"{settingsFolder}/anabot.json");
-                Anabot = JsonConvert.DeserializeObject<AnabotSettings>(file);
-            }
-
-            if (!File.Exists($"{settingsFolder}\\widowbot.json"))
-            {
-                LogWarning("No widowbot settings found, initializing with default values.");
-                Widowbot = new WidowbotSettings();
-            }
-            else
-            {
-                var file = File.ReadAllText($"{settingsFolder}/anabot.json");
-                Widowbot = JsonConvert.DeserializeObject<WidowbotSettings>(file);
-            }
-
-            if (!File.Exists($"{settingsFolder}\\triggerbot.json"))
-            {
-                LogWarning("No triggerbot settings found, initializing with default values.");
-                Triggerbot = new TriggerbotSettings();
-            }
-            else
-            {
-                var file = File.ReadAllText($"{settingsFolder}/triggerbot.json");
-                Triggerbot = JsonConvert.DeserializeObject<TriggerbotSettings>(file);
-            }
+            Aimbot = ReadJsonFromFile<AimbotSettings>($"{SettingsFolderFullPath}\\aimbot.json");
+            Anabot = ReadJsonFromFile<AnabotSettings>($"{SettingsFolderFullPath}\\anabot.json");
+            Triggerbot = ReadJsonFromFile<TriggerbotSettings>($"{SettingsFolderFullPath}\\triggerbot.json");
+            Widowbot = ReadJsonFromFile<WidowbotSettings>($"{SettingsFolderFullPath}\\widowbot.json");
             SaveSettingsToFile();
+        }
+
+        private static T ReadJsonFromFile<T>(string filePath) where T : new()
+        {
+            if (!File.Exists(filePath))
+            {
+                LogWarning($"No file found for {typeof(T).Name}, creating new file from scratch.");
+                return new T();
+            }
+            using (var file = File.OpenText(filePath))
+            {
+                return JsonConvert.DeserializeObject<T>(file.ReadToEnd());
+            }
+        }
+
+        private static void SerializeObjectToFile(object obj, string filePath)
+        {
+            var serializer = new JsonSerializer();
+            using (var file = File.CreateText(filePath))
+            {
+                serializer.Serialize(file, obj);
+            }
         }
 
         public void HandleCommand(IEnumerable<string> args)
         {
-            LogWarning("I don't do shit yet!");
+            var argsArray = args.ToArray();
+            if (!argsArray.Any())
+            {
+                LogError("You must specify a command, type 'settings help' for help.");
+                return;
+            }
+            var command = argsArray[0];
+            switch (command)
+            {
+                case "save":
+                    LogInfo("Attempting to save settings");
+                    SaveSettingsToFile();
+                    LogInfo("Settings saved successfully.");
+                    break;
+                case "load":
+                    LogInfo("Attempting to load settings from file");
+                    LoadSettingsFromDefaultPath();
+                    LogInfo("Settings loaded successfully.");
+                    break;
+                case "help":
+                    LogInfo("Commands available for Settings Manager:\n\n" +
+                            "Save\t- Save Serenity's settings to file.\n" +
+                            "Load\t- Load all settings from file.\n" +
+                            "Help\t- Print this text again.\n");
+                    break;
+                default:
+                    LogWarning($"Unrecognised command {command}.\nType 'settings help' to view all commands.\n");
+                    break;
+            }
         }
     }
 }

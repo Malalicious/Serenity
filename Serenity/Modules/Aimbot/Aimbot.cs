@@ -81,7 +81,36 @@ namespace Serenity.Modules.Aimbot
 
         public void HandleCommand(IEnumerable<string> args)
         {
-            throw new System.NotImplementedException();
+            var argsArray = args.ToArray();
+            if (!argsArray.Any())
+            {
+                LogError("You must specify a command, type 'settings help' for help.");
+                return;
+            }
+            var command = argsArray[0];
+            switch (command)
+            {
+                case "forcehs":
+                case "hs":
+                case "headshot":
+                    SettingsManager.Aimbot.ForceHeadshot = !SettingsManager.Aimbot.ForceHeadshot;
+                    LogInfo($"Force headshots: {SettingsManager.Aimbot.ForceHeadshot}");
+                    break;
+                case "antishake":
+                case "noshake":
+                    SettingsManager.Aimbot.ForceHeadshot = !SettingsManager.Aimbot.ForceHeadshot;
+                    LogInfo($"Force headshots: {SettingsManager.Aimbot.ForceHeadshot}");
+                    break;
+                case "help":
+                    LogInfo("Commands available for Aimbot:\n\n" +
+                            "Headshot, forcehs, hs\t- Force aimbot to aim for heads only.\n" +
+                            "Antishake, noshake\t- I don't really understand what this does lmao.\n" +
+                            "Help\t\t\t- Print this text again.\n");
+                    break;
+                default:
+                    LogWarning($"Unrecognised command {command}.\nType 'aimbot help' to view all commands.\n");
+                    break;
+            }
         }
     }
 }
