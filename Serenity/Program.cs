@@ -32,6 +32,8 @@ namespace Serenity
             var triggerbot = new Triggerbot();
             var widowbot = new Widowbot();
             var anabot = new Anabot();
+            var drawhelper = new DrawHelper(aimbot); // aimbot default
+
 
             LogInfo("Initialization complete. If you're lost, type help in this console.");
 
@@ -101,8 +103,19 @@ namespace Serenity
                     Thread.Sleep(200);
                 }
 
+                // toggle Fov box
+                if (MouseHelper.GetAsyncKeyState(0x62) < 0) // Numpad2
+                {
+                    drawhelper.ToggleFov();
+                    MouseHelper.keybd_event(0x62, 0, 0x2, 0);
+                    Thread.Sleep(200);
+                }
+
                 Thread.Sleep(1);
             }
+
+           
+
         }
     }
 }

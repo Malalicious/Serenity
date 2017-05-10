@@ -2,7 +2,7 @@
 
 namespace Serenity.Objects
 {
-    internal class Fov
+    public class Fov
     {
         public Point Resolution { get; set; }
 

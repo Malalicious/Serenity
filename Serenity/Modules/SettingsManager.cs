@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Serenity.Helpers;
-
+using Serenity.Objects;
 using static Serenity.Helpers.PrettyLog;
 
 namespace Serenity.Modules
@@ -161,6 +161,11 @@ namespace Serenity.Modules
                     LogWarning($"Unrecognised command {command}.\nType 'settings help' to view all commands.\n");
                     break;
             }
+        }
+
+        public Fov GetFov()
+        {
+            throw new NotImplementedException();
         }
     }
 }
