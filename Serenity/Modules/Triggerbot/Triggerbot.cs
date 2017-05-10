@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -10,7 +11,7 @@ using static Serenity.Helpers.PrettyLog;
 
 namespace Serenity.Modules.Triggerbot
 {
-    internal class Triggerbot
+    internal class Triggerbot : IModule
     {
         /// <summary>
         /// Contains all FOVs.
@@ -57,6 +58,7 @@ namespace Serenity.Modules.Triggerbot
         {
             while (true)
             {
+                if(SettingsManager.Triggerbot.IsEnabled)
                 if (MouseHelper.GetAsyncKeyState(SettingsManager.Triggerbot.AimKey) < 0)
                 {
                     // Get the screen capture.
@@ -76,6 +78,38 @@ namespace Serenity.Modules.Triggerbot
                 }
 
                 Thread.Sleep(1);
+            }
+        }
+
+        public void HandleCommand(IEnumerable<string> args)
+        {
+            if (args == null)
+            {
+                LogError("Somehow received null arguments, wat?");
+                return;
+            }
+            var argArray = args.ToArray();
+            if (!argArray.Any())
+            {
+                LogWarning("You must specify a command for Triggerbot.\nType 'triggerbot help' for help.\n");
+                return;
+            }
+            var command = argArray[0];
+
+            switch (command)
+            {
+                case "toggle":
+                    SettingsManager.Triggerbot.IsEnabled = !SettingsManager.Triggerbot.IsEnabled;
+                    LogInfo($"Triggerbot enabled: {SettingsManager.Triggerbot.IsEnabled}");
+                    break;
+                case "help":
+                    LogInfo("Commands available for Triggerbot:\n\n" +
+                            "Toggle\t- Enable/Disable the triggerbot\n" +
+                            "Help\t- Print this text again.\n");
+                    break;
+                default:
+                    LogWarning($"Unrecognised command {command}.\nType 'triggerbot help' to view all commands.");
+                    break;
             }
         }
     }

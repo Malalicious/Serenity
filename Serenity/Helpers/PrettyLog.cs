@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Serenity.Helpers
 {
@@ -11,29 +13,40 @@ namespace Serenity.Helpers
 
         public static void LogWarning(string message)
         {
-            LogMessage(WarningColour, message);
+            LogSingleLine(WarningColour, message);
         }
 
         public static void LogInfo(string message)
         {
-            LogMessage(InfoColour, message);
+            LogSingleLine(InfoColour, message);
         }
 
         public static void LogError(string message)
         {
-            LogMessage(ErrorColour, message);
+            LogSingleLine(ErrorColour, message);
         }
 
         public static void LogSuccess(string message)
         {
-            LogMessage(SuccessColour, message);
+            LogSingleLine(SuccessColour, message);
         }
 
-        private static void LogMessage(ConsoleColor color, string message)
+        private static void LogSingleLine(ConsoleColor color, string message)
         {
             Console.ForegroundColor = color;
             Console.WriteLine(message);
-            Console.ForegroundColor = InfoColour;
+            Console.ResetColor();
         }
+
+        private static void LogMessage(IEnumerable<PrettyMessage> messages)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class PrettyMessage
+    {
+        public ConsoleColor MessageColor { get; set; }
+        public string Message { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
@@ -10,7 +11,7 @@ using static Serenity.Helpers.PrettyLog;
 
 namespace Serenity.Modules.Widowbot
 {
-    internal class Widowbot
+    internal class Widowbot : IModule
     {
         /// <summary>
         /// Contains all FOVs.
@@ -77,6 +78,12 @@ namespace Serenity.Modules.Widowbot
 
                 Thread.Sleep(1);
             }
+        }
+
+        public void HandleCommand(IEnumerable<string> args)
+        {
+            LogWarning("Widowbot currently has no command support.\n" +
+                       $"To change its settings, go to {Environment.CurrentDirectory}\\widowbot.json");
         }
     }
 }
