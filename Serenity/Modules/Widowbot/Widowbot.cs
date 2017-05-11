@@ -85,5 +85,10 @@ namespace Serenity.Modules.Widowbot
             LogWarning("Widowbot currently has no command support.\n" +
                        $"To change its settings, go to {Environment.CurrentDirectory}\\widowbot.json");
         }
+
+        public Fov GetFov()
+        {
+            return MyFov;
+        }
     }
 }

@@ -71,6 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\DrawHelper.cs" />
     <Compile Include="Helpers\MouseHelper.cs" />
     <Compile Include="Helpers\PrettyLog.cs" />
     <Compile Include="Helpers\ScreenHelper.cs" />

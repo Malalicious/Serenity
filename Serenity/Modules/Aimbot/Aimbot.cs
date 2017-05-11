@@ -112,5 +112,10 @@ namespace Serenity.Modules.Aimbot
                     break;
             }
         }
+
+        public Fov GetFov()
+        {
+            return MyFov;
+        }
     }
 }

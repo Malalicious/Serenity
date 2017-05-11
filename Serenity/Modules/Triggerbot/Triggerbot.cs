@@ -111,6 +111,13 @@ namespace Serenity.Modules.Triggerbot
                     LogWarning($"Unrecognised command {command}.\nType 'triggerbot help' to view all commands.");
                     break;
             }
+
+
+        }
+
+        public Fov GetFov()
+        {
+            return MyFov;
         }
     }
 }

@@ -92,5 +92,10 @@ namespace Serenity.Modules.Anabot
             LogWarning("Anabot currently has no command support.\n" +
                        $"To change its settings, go to {Environment.CurrentDirectory}\\anabot.json");
         }
+
+        public Fov GetFov()
+        {
+            return MyFov;
+        }
     }
 }
