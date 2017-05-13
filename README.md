@@ -1,11 +1,7 @@
 # Donate
 Donations keep me motivated to make and release more stuff such as a custom obfuscator and loaders.
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="YWUTZF5HACCDQ">
-<input type="image" src="https://www.paypalobjects.com/nl_NL/NL/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal, de veilige en complete manier van online betalen.">
-<img alt="" border="0" src="https://www.paypalobjects.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
-</form>
+
+PayPal: paypal@roeldev.nl
 
 # Serenity
 This is cheat software I have written a long time ago for Overwatch and used for quite a long time. It has been optimized for use with my sensitivity settings, I'll include those. Currently I do not give any support but I might push some updates when I return to Overwatch again. The cheat has been written in C# and the search algorithm is pretty fast. It's not the prettiest code and it was written over a weekend time.
