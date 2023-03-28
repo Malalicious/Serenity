@@ -1,3 +1,5 @@
+# This project is no longer maintained and is kept purely for educational reasons
+
 # Serenity
 This is cheat software I have written a long time ago for Overwatch and used for quite a long time. It has been optimized for use with my sensitivity settings, I'll include those. Currently I do not give any support but I might push some updates when I return to Overwatch again. The cheat has been written in C# and the search algorithm is pretty fast. It's not the prettiest code and it was written over a weekend time.
 
